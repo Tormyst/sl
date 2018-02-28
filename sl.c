@@ -64,14 +64,17 @@ int my_mvaddstr(int y, int x, char *str)
     for ( ; x < 0; ++x, ++str)
         if (*str == '\0')  return ERR;
     for ( ; *str != '\0'; ++str, x++) {
+      if(*str != ' ') {
 	double i = x + y;
 	int red   = sin(i*frequ + 0.0) * 127. + 128.;
 	int green = sin(i*frequ + 2.*(M_PI/3.)) * 127. + 128.;
 	int blue  = sin(i*frequ + 4.*(M_PI/3.)) * 127. + 128.;
 	printf("\x1b[38;2;%d;%d;%dm", red, green, blue);
 	fflush(stdout);
-        if (mvaddch(y, x, *str) == ERR)  return ERR;
-        refresh();
+      }
+      if (mvaddch(y, x, *str) == ERR)  return ERR;
+      if(*str != ' ')
+	refresh();
     }
     return OK;
 }
@@ -120,7 +123,7 @@ int main(int argc, char *argv[])
         }
         getch();
         refresh();
-        usleep(40000);
+        usleep(20000);
     }
     mvcur(0, COLS - 1, LINES - 1, 0);
     endwin();
